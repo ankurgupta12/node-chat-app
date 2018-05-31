@@ -11,14 +11,24 @@ var io = socketIo(server);
 io.on('connection',(socket)=>{
 
 console.log('new user connected');
-
-socket.emit('newMessage',{
-	'from':"myemail.com",
-	'text':"new Hi Ankiuu"
-});
-socket.on('createMessage',(message)=>{
-	console.log(message);
+socket.emit('createMessage',{
+	from:"admin",
+	text:"welcomr to chat aapp"
 })
+socket.broadcast.emit('createMessage',{
+	from:"admin",
+	text:"welcomr to chat aapp",
+	createdAt:new Date().getTime()
+})
+
+socket.on('createMessage',(message)=>{
+	console.log(message,'createMessage');
+	io.emit('newMessage',{
+		from:message.from,
+		text:message.text,
+		createdAt:new Date().getTime()
+	})
+});
 socket.on('disconnect',()=>{
 	console.log('client is disconnectd');
 });
